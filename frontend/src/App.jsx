@@ -16,6 +16,8 @@ const App = () => {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<HomePage />} />
         <Route path="/add-notes" element={<AddNotes />} />
+        <Route path="/edit-notes" element={<EditNotePage />} />
+        <Route path="/notes-detail" element={<NotePage />} />
       </Route>
     )
   );
