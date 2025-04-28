@@ -3,11 +3,15 @@ import NoteCardContainer from "../components/NoteCardContainer";
 
 import React from "react";
 
-const HomePage = () => {
+const HomePage = ({ notes, loading }) => {
+  if (loading) {
+    return <div>Loading notes...</div>;
+  }
+
   return (
     <>
       <Filter />
-      <NoteCardContainer />
+      <NoteCardContainer notes={notes} />
     </>
   );
 };

@@ -1,20 +1,16 @@
 import NoteCard from "./NoteCard";
 
-const NoteCardContainer = () => {
+const NoteCardContainer = ({ notes }) => {
+  if (notes.length === 0) {
+    return <div>No notes available.</div>;
+  }
+
   return (
     <div className="container">
       <div className="note-has-grid row">
-        <NoteCard color="green" />
-        <NoteCard color="purple" />
-        <NoteCard color="blue" />
-
-        <NoteCard color="green" />
-        <NoteCard color="purple" />
-        <NoteCard color="blue" />
-
-        <NoteCard color="green" />
-        <NoteCard color="purple" />
-        <NoteCard color="blue" />
+        {notes.map((note) => (
+          <NoteCard key={note.id} note={note} />
+        ))}
       </div>
     </div>
   );
