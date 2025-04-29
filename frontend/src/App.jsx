@@ -6,20 +6,21 @@ import AddNotes from "./pages/AddNotes";
 import EditNotePage from "./pages/EditNotePage";
 import NotePage from "./pages/NotePage";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const App = () => {
   const [notes, setNotes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchNotes = async () => {
       try {
+        setLoading(true);
         const response = await axios.get("http://localhost:8000/notes/");
         if (response.status !== 200) {
           throw new Error("Failed to fetch notes");
         }
         const data = await response.data;
-        console.log("Notes:", data);
         setNotes(data);
       } catch (error) {
         console.error(error);
@@ -31,14 +32,30 @@ const App = () => {
     fetchNotes();
   }, []);
 
+  const addNote = async (data) => {
+    try {
+      const response = await axios.post("http://localhost:8000/notes/", data);
+      if (response.status !== 201) {
+        throw new Error("Failed to add note");
+      }
+      const newNote = await response.data;
+      setNotes([...notes, newNote]);
+      toast.success("A new note was added successfully");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  console.log("Notes:", notes);
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage notes={notes} loading={loading} />} />
-          <Route path="/add-notes" element={<AddNotes />} />
+          <Route path="/add-notes" element={<AddNotes addNote={addNote} />} />
           <Route path="/edit-notes" element={<EditNotePage />} />
-          <Route path="/notes-detail" element={<NotePage />} />
+          <Route path="/notes/:slug" element={<NotePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
