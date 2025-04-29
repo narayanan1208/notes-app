@@ -4,14 +4,10 @@ import NoteCardContainer from "../components/NoteCardContainer";
 import React from "react";
 
 const HomePage = ({ notes, loading }) => {
-  if (loading) {
-    return <div>Loading notes...</div>;
-  }
-
   return (
     <>
       <Filter />
-      <NoteCardContainer notes={notes} />
+      <NoteCardContainer notes={notes} loading={loading} />
     </>
   );
 };
