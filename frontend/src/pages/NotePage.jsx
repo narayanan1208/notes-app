@@ -3,13 +3,18 @@ import "./NotePage.css";
 import { BiSolidTrashAlt } from "react-icons/bi";
 import { FiEdit } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
-import Modal from "../components/Modal";
 import axios from "axios";
 import { FormatDate } from "../components/FormatDate";
+import Modal from "../components/Modal";
 
-const NotePage = () => {
+const NotePage = ({ deleteNote }) => {
   const [note, setNote] = useState({});
   const { slug } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleIsOpen = () => {
+    setIsOpen(!isOpen);
+  };
 
   useEffect(() => {
     const fetchNote = async () => {
@@ -19,7 +24,6 @@ const NotePage = () => {
           throw new Error("Failed to fetch notes");
         }
         const data = await response.data;
-        console.log("Notes:", data);
         setNote(data);
       } catch (error) {
         console.error(error);
@@ -48,14 +52,21 @@ const NotePage = () => {
               <span>Edit</span>
             </button>
           </Link>
-          <button className="btn btn-danger">
+
+          <button className="btn btn-danger" onClick={handleIsOpen}>
             <BiSolidTrashAlt />
             <span>Delete</span>
           </button>
         </span>
         <p className="description">{note.body}</p>
       </div>
-      <Modal />
+
+      {isOpen && (
+        <Modal
+          handleIsOpen={handleIsOpen}
+          deleteNote={() => deleteNote(slug)}
+        />
+      )}
     </>
   );
 };

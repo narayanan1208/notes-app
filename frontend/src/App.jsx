@@ -13,24 +13,24 @@ const App = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get("http://localhost:8000/notes/");
-        if (response.status !== 200) {
-          throw new Error("Failed to fetch notes");
-        }
-        const data = await response.data;
-        setNotes(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchNotes();
   }, []);
+
+  const fetchNotes = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("http://localhost:8000/notes/");
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch notes");
+      }
+      const data = await response.data;
+      setNotes(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addNote = async (data) => {
     try {
@@ -47,18 +47,25 @@ const App = () => {
   };
 
   const updateNote = (data, slug) => {
-    console.log("SLUG : ", slug, "DATA : ", data);
     axios
       .put(`http://localhost:8000/notes/${slug}/`, data)
       .then((res) => {
-        console.log(res.data);
         toast.success("Note updated succesfully");
       })
 
       .catch((err) => console.log(err.message));
   };
 
-  console.log("Notes:", notes);
+  const deleteNote = async (slug) => {
+    try {
+      await axios.delete(`http://localhost:8000/notes/${slug}/`);
+      toast.success("Note deleted successfully!");
+      fetchNotes();
+    } catch (err) {
+      console.error(err.message);
+      toast.error("Failed to delete note");
+    }
+  };
 
   return (
     <BrowserRouter>
@@ -70,7 +77,10 @@ const App = () => {
             path="/edit-note/:slug"
             element={<EditNotePage updateNote={updateNote} />}
           />
-          <Route path="/notes/:slug" element={<NotePage />} />
+          <Route
+            path="/notes/:slug"
+            element={<NotePage deleteNote={deleteNote} />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>
