@@ -42,7 +42,7 @@ const NotePage = () => {
           </p>
         </span>
         <span className="button-group">
-          <Link to="/edit-notes">
+          <Link to={`/edit-note/${slug}`}>
             <button className="btn btn-primary">
               <FiEdit />
               <span>Edit</span>
@@ -53,9 +53,7 @@ const NotePage = () => {
             <span>Delete</span>
           </button>
         </span>
-        <p className="description">
-          {note.body}
-        </p>
+        <p className="description">{note.body}</p>
       </div>
       <Modal />
     </>

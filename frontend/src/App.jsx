@@ -46,6 +46,18 @@ const App = () => {
     }
   };
 
+  const updateNote = (data, slug) => {
+    console.log("SLUG : ", slug, "DATA : ", data);
+    axios
+      .put(`http://localhost:8000/notes/${slug}/`, data)
+      .then((res) => {
+        console.log(res.data);
+        toast.success("Note updated succesfully");
+      })
+
+      .catch((err) => console.log(err.message));
+  };
+
   console.log("Notes:", notes);
 
   return (
@@ -54,7 +66,10 @@ const App = () => {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage notes={notes} loading={loading} />} />
           <Route path="/add-notes" element={<AddNotes addNote={addNote} />} />
-          <Route path="/edit-notes" element={<EditNotePage />} />
+          <Route
+            path="/edit-note/:slug"
+            element={<EditNotePage updateNote={updateNote} />}
+          />
           <Route path="/notes/:slug" element={<NotePage />} />
         </Route>
       </Routes>
