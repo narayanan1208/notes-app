@@ -22,7 +22,6 @@ const AddNotes = ({ addNote }) => {
     }
     addNote(newNote);
     navigate("/");
-    console.log(newNote);
   };
 
   return (
