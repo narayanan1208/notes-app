@@ -11,6 +11,20 @@ import { toast } from "react-toastify";
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [filterText, setFilterText] = useState("");
+
+  const handleFilterText = (val) => {
+    setFilterText(val);
+  };
+
+  const filteredNotes =
+    filterText === "BUSINESS"
+      ? notes.filter((note) => note.category == "BUSINESS")
+      : filterText === "PERSONAL"
+      ? notes.filter((note) => note.category == "PERSONAL")
+      : filterText === "IMPORTANT"
+      ? notes.filter((note) => note.category == "IMPORTANT")
+      : notes;
 
   useEffect(() => {
     fetchNotes();
@@ -71,7 +85,16 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<HomePage notes={notes} loading={loading} />} />
+          <Route
+            index
+            element={
+              <HomePage
+                notes={filteredNotes}
+                loading={loading}
+                handleFilterText={handleFilterText}
+              />
+            }
+          />
           <Route path="/add-notes" element={<AddNotes addNote={addNote} />} />
           <Route
             path="/edit-note/:slug"
